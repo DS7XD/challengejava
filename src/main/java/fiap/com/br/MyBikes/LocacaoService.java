@@ -1,4 +1,4 @@
-// Arquivo: service/LocacaoService.java
+
 package com.mybikes.locacoes.service;
 
 import com.mybikes.locacoes.model.Locacao;
