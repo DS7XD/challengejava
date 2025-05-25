@@ -1,18 +1,33 @@
-package service;
+package com.mybikes.locacoes.service;
 
-import model.Moto;
-import java.util.ArrayList;
+import com.mybikes.locacoes.model.Moto;
+import com.mybikes.locacoes.repository.MotoRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class MotoService {
-    private List<Moto> motos = new ArrayList<>();
 
-    public void cadastrarMoto(Moto moto) {
-        motos.add(moto);
-        System.out.println("Moto cadastrada com sucesso!");
+    private final MotoRepository repository;
+
+    public MotoService(MotoRepository repository) {
+        this.repository = repository;
     }
 
-    public List<Moto> listarMotos() {
-        return motos;
+    public List<Moto> listarTodas() {
+        return repository.findAll();
+    }
+
+    public Moto salvar(Moto moto) {
+        return repository.save(moto);
+    }
+
+    public Moto buscarPorId(Integer id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    public void deletarPorId(Integer id) {
+        repository.deleteById(id);
     }
 }
