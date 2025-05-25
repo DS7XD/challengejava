@@ -2,184 +2,58 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.mybikes</groupId>
     <artifactId>locacoes-api</artifactId>
     <version>1.0.0</version>
+    <name>MyBikes</name>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
     <dependencies>
+        <!-- Spring Boot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!-- Spring Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+
+        <!-- Oracle JDBC -->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>19.3.0.0</version>
         </dependency>
+
+        <!-- Swagger (OpenAPI UI) -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.2.0</version>
         </dependency>
+
+        <!-- Jakarta Persistence API -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
     </dependencies>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
+
+    <build>
+        <plugins>
+            <!-- Plugin para empacotar como app Spring Boot -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
-
-// Arquivo: LocacoesApiApplication.java
-package com.mybikes.locacoes;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class LocacoesApiApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(LocacoesApiApplication.class, args);
-    }
-}
-
-// Arquivo: model/Moto.java
-package com.mybikes.locacoes.model;
-
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "motos")
-public class Moto {
-
-    @Id
-    @Column(name = "id_moto")
-    private Integer id;
-
-    private String modelo;
-    private String placa;
-    private String cor;
-    private String status;
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public String getModelo() { return modelo; }
-    public void setModelo(String modelo) { this.modelo = modelo; }
-    public String getPlaca() { return placa; }
-    public void setPlaca(String placa) { this.placa = placa; }
-    public String getCor() { return cor; }
-    public void setCor(String cor) { this.cor = cor; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-}
-
-// Arquivo: model/Locacao.java
-package com.mybikes.locacoes.model;
-
-import jakarta.persistence.*;
-import java.sql.Date;
-
-@Entity
-@Table(name = "locacoes")
-public class Locacao {
-
-    @Id
-    @Column(name = "id_locacao")
-    private Integer id;
-
-    @Column(name = "id_moto")
-    private Integer idMoto;
-
-    @Column(name = "data_inicio")
-    private Date dataInicio;
-
-    @Column(name = "data_fim")
-    private Date dataFim;
-
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
-    public Integer getIdMoto() { return idMoto; }
-    public void setIdMoto(Integer idMoto) { this.idMoto = idMoto; }
-    public Date getDataInicio() { return dataInicio; }
-    public void setDataInicio(Date dataInicio) { this.dataInicio = dataInicio; }
-    public Date getDataFim() { return dataFim; }
-    public void setDataFim(Date dataFim) { this.dataFim = dataFim; }
-}
-
-// Arquivo: repository/MotoRepository.java
-package com.mybikes.locacoes.repository;
-
-import com.mybikes.locacoes.model.Moto;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface MotoRepository extends JpaRepository<Moto, Integer> {
-}
-
-// Arquivo: repository/LocacaoRepository.java
-package com.mybikes.locacoes.repository;
-
-import com.mybikes.locacoes.model.Locacao;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface LocacaoRepository extends JpaRepository<Locacao, Integer> {
-}
-
-// Arquivo: controller/MotoController.java
-package com.mybikes.locacoes.controller;
-
-import com.mybikes.locacoes.model.Moto;
-import com.mybikes.locacoes.repository.MotoRepository;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/motos")
-public class MotoController {
-
-    private final MotoRepository repository;
-
-    public MotoController(MotoRepository repository) {
-        this.repository = repository;
-    }
-
-    @GetMapping
-    public List<Moto> listar() {
-        return repository.findAll();
-    }
-
-    @PostMapping
-    public Moto cadastrar(@RequestBody Moto moto) {
-        return repository.save(moto);
-    }
-}
-
-// Arquivo: controller/LocacoesController.java
-package com.mybikes.locacoes.controller;
-
-import com.mybikes.locacoes.model.Locacao;
-import com.mybikes.locacoes.repository.LocacaoRepository;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/locacoes")
-public class LocacoesController {
-
-    private final LocacaoRepository repository;
-
-    public LocacoesController(LocacaoRepository repository) {
-        this.repository = repository;
-    }
-
-    @GetMapping
-    public List<Locacao> listar() {
-        return repository.findAll();
-    }
-
-    @PostMapping
-    public Locacao cadastrar(@RequestBody Locacao locacao) {
-        return repository.save(locacao);
-    }
-}
