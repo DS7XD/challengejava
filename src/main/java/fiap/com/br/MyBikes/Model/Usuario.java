@@ -1,3 +1,5 @@
+package model;
+
 public class Usuario {
     private int id;
     private String nome;
@@ -9,7 +11,16 @@ public class Usuario {
         this.email = email;
     }
 
+    public int getId() { return id; }
+    public String getNome() { return nome; }
+    public String getEmail() { return email; }
+
+    public void setId(int id) { this.id = id; }
+    public void setNome(String nome) { this.nome = nome; }
+    public void setEmail(String email) { this.email = email; }
+
+    @Override
     public String toString() {
-        return "Usuário [ID: " + id + ", Nome: " + nome + ", Email: " + email + "]";
+        return "Usuario [ID: " + id + ", Nome: " + nome + ", Email: " + email + "]";
     }
 }
